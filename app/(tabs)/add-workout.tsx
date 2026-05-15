@@ -1,5 +1,5 @@
 import AddWorkoutScreen from "../../screens/AddWorkoutScreen";
 
-export default function ExploreScreen() {
+export default function AddWorkoutTab() {
   return <AddWorkoutScreen />;
 }
