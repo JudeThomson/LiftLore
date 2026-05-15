@@ -15,8 +15,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { BORDER_RADIUS, COLORS, SPACING, TYPOGRAPHY } from "../constants/theme";
 import { saveWorkout } from "../storage/storage";
 
+const CATEGORIES = ["Chest", "Back", "Legs", "Arms", "Shoulders", "Cardio"];
+
 const AddWorkoutScreen = () => {
   const [exercise, setExercise] = useState("");
+  const [category, setCategory] = useState("Chest");
   const [weight, setWeight] = useState("");
   const [reps, setReps] = useState("");
 
@@ -32,6 +35,7 @@ const AddWorkoutScreen = () => {
     const workoutData = {
       id: Date.now().toString(),
       name: exercise,
+      category: category,
       weight: parseFloat(weight),
       reps: parseInt(reps, 10),
       date: new Date().toLocaleDateString("en-US", {
@@ -49,6 +53,7 @@ const AddWorkoutScreen = () => {
       setExercise("");
       setWeight("");
       setReps("");
+      setCategory("Chest");
 
       Alert.alert("Success", "Workout logged successfully!");
     } else {
@@ -78,7 +83,7 @@ const AddWorkoutScreen = () => {
           <View style={styles.form}>
             {/* Exercise Name */}
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Exercise</Text>
+              <Text style={styles.label}>Exercise Name</Text>
               <View style={styles.inputWrapper}>
                 <Ionicons
                   name="fitness-outline"
@@ -95,6 +100,36 @@ const AddWorkoutScreen = () => {
                   selectionColor={COLORS.primary}
                 />
               </View>
+            </View>
+
+            {/* Category Selection */}
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Category</Text>
+              <ScrollView 
+                horizontal 
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.categoryScroll}
+              >
+                {CATEGORIES.map((cat) => (
+                  <TouchableOpacity
+                    key={cat}
+                    style={[
+                      styles.categoryChip,
+                      category === cat && styles.categoryChipActive,
+                    ]}
+                    onPress={() => setCategory(cat)}
+                  >
+                    <Text
+                      style={[
+                        styles.categoryChipText,
+                        category === cat && styles.categoryChipTextActive,
+                      ]}
+                    >
+                      {cat}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
             </View>
 
             <View style={styles.row}>
@@ -221,6 +256,30 @@ const styles = StyleSheet.create({
     color: COLORS.textPrimary,
     fontSize: 16,
     height: "100%",
+  },
+  categoryScroll: {
+    paddingVertical: SPACING.xs,
+  },
+  categoryChip: {
+    paddingHorizontal: SPACING.lg,
+    paddingVertical: SPACING.sm,
+    borderRadius: BORDER_RADIUS.pill,
+    backgroundColor: COLORS.surface,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    marginRight: SPACING.sm,
+  },
+  categoryChipActive: {
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primary,
+  },
+  categoryChipText: {
+    ...TYPOGRAPHY.caption,
+    color: COLORS.textSecondary,
+    fontWeight: "600",
+  },
+  categoryChipTextActive: {
+    color: COLORS.white,
   },
   row: {
     flexDirection: "row",
